@@ -1,0 +1,95 @@
+
+
+const winningConditions = [/* ... all 8 win combos ... */];
+
+const handleResultValidation = () => {
+    let roundWon = false;
+    for (let i = 0; i < winningConditions.length; i++) {
+        const [aIndex, bIndex, cIndex] = winningConditions[i];
+
+        if (boardState[aIndex] === boardState[bIndex] && boardState[aIndex] === boardState[cIndex] && boardState[aIndex] !== '') {
+            roundWon = true;
+
+            // Crucial UI Update: Highlight the winning cells
+            cells[aIndex].classList.add('win'); 
+            cells[bIndex].classList.add('win');
+            cells[cIndex].classList.add('win'); 
+
+            winSound.play().catch(e => console.warn(e)); // Play the victory sound
+            break;
+        }
+    }
+    // ... rest of win/draw/player change logic ...
+};
+
+🔊 Sound Design: Overcoming CORS and Playback Issues
+
+Adding audio for clicks and wins required tackling a persistent frontend headache: Cross-Origin Resource Sharing (CORS). I built the solution around using a CORS-compliant CDN (like Cloudinary) to ensure the audio files load correctly on the CodePen domain.
+The Audio Playback Handler
+
+The key to preventing the click sound from getting cut off during rapid clicks is resetting the playback time to zero before calling play(). I built the handleCellPlayed function to guarantee instant, responsive audio feedback.
+
+const handleCellPlayed = (clickedCell, clickedCellIndex) => {
+    // Update state and visual DOM
+    boardState[clickedCellIndex] = currentPlayer;
+    clickedCell.innerHTML = currentPlayer;
+    clickedCell.classList.add(currentPlayer.toLowerCase());
+
+    // Essential for responsive playback:
+    clickSound.currentTime = 0; 
+    clickSound.play().catch(e => console.warn(e)); // Use .catch() for error handling
+
+    handleResultValidation();
+};
+
+🎨 CSS Polish: Highlighting Key States
+
+The visual appeal relies on clear differentiation and smooth transitions. I built the CSS to make the most important states immediately obvious:
+
+/* Styling for the Win Highlight */
+.cell.win {
+    background-color: #27ae60; /* Green highlight for winning cells */
+    color: white;
+    box-shadow: 0 0 15px #2ecc71;
+    transform: scale(1.05);
+}
+
+/* Smooth transition for hover and interaction */
+.cell {
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+/* Responsive button feedback */
+#reset-button:active {
+    box-shadow: 0 2px #773b93;
+    transform: translateY(2px);
+}
+
+tic tac toe game winning ui
+🔗 Live Demo and Source Code
+
+This project showcases fundamental JavaScript optimization and DOM manipulation skills. Feel free to explore the full source code and see these principles in action!
+
+    Live Demo: Check out the game on CodePen!
+
+Top comments (0)
+Subscribe
+pic
+Code of Conduct • Report abuse
+Siddhesh Mithbavkar
+👨‍💻 Frontend Developer | Passionate about crafting clean & responsive UI 💼 2+ years of experience 🔧 Tech Stack: HTML | CSS | JavaScript | Bootstrap | Tailwind CSS | ReactJS
+
+    Location
+    India
+    Pronouns
+    Mr
+    Joined
+    Jun 14, 2025
+
+More from Siddhesh Mithbavkar
+JavaScript Closures Finally Clicked!
+#javascript #beginners #react #webdev
+Master JavaScript Promises in 2025: Complete Guide, Real Examples & Ultimate Cheat Sheet
+#javascript #webdev #react #programming
+Why TypeScript Is No Longer Optional in Modern JavaScript Projects (and How to Get Started)
+#typescript #javascript #frontend #coding
